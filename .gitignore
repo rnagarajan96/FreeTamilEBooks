@@ -47,6 +47,3 @@ captures/
 
 # Keystore files
 *.jks
-/app/keysotre/
-/app/fabric.properties
-/app/google-services.json
