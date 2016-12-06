@@ -163,31 +163,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void downloadPressed(BookListParser.Books.Book bookItem) {
-
-        /*new TaskDownloadBook(getActivity(), bookItem, new BookDownloadListener() {
-            @Override
-            public void booksDownloaded(BookListParser.Books.Book bookItem, String response) {
-                switch (response) {
-                    case TaskDownloadBook.ERROR:
-                        if(getActivity() != null) {
-                            AlertUtils.showNotification(getActivity(), getString(R.string.download_error));
-                        }
-                        break;
-                    case TaskDownloadBook.CANCELLED:
-                        if(getActivity() != null) {
-                            AlertUtils.showNotification(getActivity(), getString(R.string.download_cancelled));
-                        }
-                        break;
-
-                    default:
-                        if(getActivity() != null) {
-                            AlertUtils.showNotification(getActivity(), getString(R.string.download_completed));
-                        }
-                        break;
-                }
-            }
-        }).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);*/
-
         DownloadManager.Request requestVideo = new DownloadManager.Request(Uri.parse(bookItem.getEpub()));
         requestVideo.setDestinationUri(Uri.parse("file://" + DeviceUtils.getStorageLocation() + "/" + bookItem.getTitle() + ".epub"));
         requestVideo.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
