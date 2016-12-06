@@ -13,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -163,6 +164,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void downloadPressed(BookListParser.Books.Book bookItem) {
+        Log.e("supriya ","uri " +bookItem.getEpub());
         DownloadManager.Request requestVideo = new DownloadManager.Request(Uri.parse(bookItem.getEpub()));
         requestVideo.setDestinationUri(Uri.parse("file://" + DeviceUtils.getStorageLocation() + "/" + bookItem.getTitle() + ".epub"));
         requestVideo.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);

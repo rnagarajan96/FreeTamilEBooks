@@ -17,6 +17,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +44,8 @@ import java.util.ArrayList;
 public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequestPermissionsResultCallback {
     private ArrayList<String> item = null;
     private ArrayList<String> path = null;
-    private ListView downloadsList;
+    private RecyclerView downloadsList;
+    private DownloadFragemntAdapter downloadFragemntAdapter ;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -90,21 +93,29 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
     }
 
     private void init(View view) {
-        downloadsList = (ListView) view.findViewById(R.id.download_list);
-        downloadsList.setEmptyView(view.findViewById(R.id.empty));
+        downloadsList = (RecyclerView) view.findViewById(R.id.download_list);
+     //   downloadsList.setEmptyView(view.findViewById(R.id.empty));
     }
 
     private void setupDefaults() {
+
+        downloadsList.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        downloadsList.setLayoutManager(layoutManager);
+
+        downloadFragemntAdapter = new DownloadFragemntAdapter(getActivity(),item);
+downloadsList.setAdapter(downloadFragemntAdapter);
         getDir(DeviceUtils.getStorageLocation());
     }
 
     private void setupEvents() {
-        downloadsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*downloadsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 openBook(path.get(position));
             }
-        });
+        });*/
     }
 
     private void getDir(String dirPath) {
@@ -132,8 +143,8 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
             }
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, item);
-        downloadsList.setAdapter(adapter);
+       /* ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, item);
+        downloadsList.setAdapter(adapter);*/
     }
 
     public void openBook(String path) {

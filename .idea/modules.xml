@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FreeTamilEbooks.iml" filepath="$PROJECT_DIR$/FreeTamilEbooks.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FreeTamilEBooks-Gradle.iml" filepath="$PROJECT_DIR$/FreeTamilEBooks-Gradle.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
