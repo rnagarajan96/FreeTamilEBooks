@@ -1,0 +1,59 @@
+<resources>
+    <string name="app_name">FreeTamilEbooks</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">அமைப்புகள்</string>
+
+    <string name="home">முகப்பு</string>
+    <string name="aboutus">எங்களை பற்றி</string>
+    <string name="our_team">பங்களிப்பாளர்கள்</string>
+    <string name="help_us">படைப்புகளை வெளியிட</string>
+    <string name="downloads">பதிவிறக்கங்கள்</string>
+    <string name="comments">கருத்து</string>
+    <string name="source_code">மூலநிரல்</string>
+    <string name="search">தேடு</string>
+    <string name="sync">ஒத்திசை</string>
+    <string name="source">மூலநிரல்</string>
+    <string name="loading_">ஏற்றுகிறது&#8230;</string>
+    <string name="no_books">புத்தகங்கள் ஏதுமில்லை</string>
+    <string name="download">பதிவிறக்கு</string>
+    <string name="open">திற</string>
+    <string name="submit">சமர்ப்பி</string>
+    <string name="downloading">%s பதிவிறக்கம் செய்கிறது.</string>
+    <string name="cancel">இரத்துசெய்</string>
+    <string name="hide">மறை</string>
+    <string name="download_error">பதிவிறக்கத்தின் போது பிழை ஏற்ப்பட்டுள்ளது.</string>
+    <string name="download_cancelled">பதிவிறக்கம் இரத்துசெய்யப்பட்டது.</string>
+    <string name="download_completed">பதிவிறக்கம் முடிந்தது.</string>
+
+
+    <string name="your_message">உங்கள் கருத்து</string>
+    <string name="your_email">உங்கள் மின்னஞ்சல்</string>
+    <string name="lastname">கடைசி பெயர்</string>
+    <string name="firstname">முதற் பெயர்</string>
+
+
+    <string name="firstname_alert">முதற் பெயர் காலியாக இருக்கக் கூடாது</string>
+    <string name="lastname_alert">கடைசி பெயர் காலியாக இருக்கக் கூடாது</string>
+    <string name="mail_alert">மின்னஞ்சல் காலியாக இருக்கக் கூடாது</string>
+    <string name="nomail_alert">சரியான மின்னஞ்சல் முகவரியை உள்ளிடவும்!!!</string>
+    <string name="message_alert">உங்கள் கருத்தை உள்ளிடவும்</string>
+
+    <string name="check_connection">இந்த செயலியை பயன்படுத்த இணைய இணைப்பு தேவை&#8230;</string>
+    <string name="yes">ஆம்</string>
+    <string name="no">இல்லை</string>
+    <string name="down_epub">மின் புத்தகங்களை படிக்க FBReader தேவைப்படுகிறது&#8230;\nபதிவிறக்க வேண்டுமா?</string>
+    <string name="wrong_format">தவறான கோப்பு வடிவம்!!!</string>
+
+    <string name="push_notification">புது மின்னூல் அறிவிப்புகள்</string>
+    <string name="on">வேண்டும்</string>
+    <string name="off">வேண்டாம்</string>
+    <string name="storage_location">சேமிக்கும் இடம்</string>
+    <string name="internal">உள்ளிருப்பு நினைவகம்</string>
+    <string name="external">நினைவக அட்டை</string>
+    <string name="set">அமை</string>
+    <string name="zero_percent">0%</string>
+</resources>

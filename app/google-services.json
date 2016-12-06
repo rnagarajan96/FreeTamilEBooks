@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "336666465716",
+    "firebase_url": "https://freetamilebooks-cf4db.firebaseio.com",
+    "project_id": "freetamilebooks-cf4db",
+    "storage_bucket": "freetamilebooks-cf4db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:336666465716:android:6fc2e6476362d462",
+        "android_client_info": {
+          "package_name": "com.jskaleel.fte"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "336666465716-hur9adtva1nbboe0t00d9qnmjk0tbqgs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwRQrM0Eipd21mEXwNZ2bC8GxXwziFwpw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
