@@ -17,6 +17,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -177,6 +178,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             file.mkdir();
         }
 
+        Log.e("supriya ","uri " +bookItem.getEpub());
         DownloadManager.Request requestVideo = new DownloadManager.Request(Uri.parse(bookItem.getEpub()));
         String filePath = file + "/" + bookItem.getBookid();
         requestVideo.setDestinationUri(Uri.parse("file://" + filePath));
