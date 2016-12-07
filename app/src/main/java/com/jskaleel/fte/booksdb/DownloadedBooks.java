@@ -11,7 +11,7 @@ import com.activeandroid.annotation.Table;
 @Table(name = "DownloadedBooks")
 public class DownloadedBooks extends Model {
 
-    @Column(name="book_id")
+    @Column(name="book_id", unique = true, notNull = true)
     private String bookId;
 
     @Column(name="title")

@@ -2,6 +2,7 @@ package com.jskaleel.fte.fragments.home;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -63,7 +65,7 @@ class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookViewHolde
             }
         });
 
-        holder.txtOpen.setOnClickListener(new View.OnClickListener() {
+        holder.rlItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (itemClickListener != null) {
@@ -133,17 +135,21 @@ class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookViewHolde
     }
 
     static class BookViewHolder extends RecyclerView.ViewHolder {
+        RelativeLayout rlItemView;
         TextView txtBookTitle, txtAuthorName, txtDownload, txtOpen;
         ImageView ivBookImage, ivFavourite;
+        CardView cardItemView;
 
         BookViewHolder(View itemView) {
             super(itemView);
+            rlItemView = (RelativeLayout) itemView.findViewById(R.id.rl_item_view);
             txtBookTitle = (TextView) itemView.findViewById(R.id.txt_title);
             txtAuthorName = (TextView) itemView.findViewById(R.id.txt_author);
             ivBookImage = (ImageView) itemView.findViewById(R.id.iv_book_image);
             txtDownload = (TextView) itemView.findViewById(R.id.txt_download);
             txtOpen = (TextView) itemView.findViewById(R.id.txt_open);
             ivFavourite = (ImageView) itemView.findViewById(R.id.iv_favourite);
+            cardItemView = (CardView) itemView.findViewById(R.id.card_view);
         }
     }
 }

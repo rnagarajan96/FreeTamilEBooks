@@ -46,4 +46,6 @@
     <string name="internal">உள்ளிருப்பு நினைவகம்</string>
     <string name="external">நினைவக அட்டை</string>
     <string name="set">அமை</string>
+    <string name="book_already_exist">புத்தகம் ஏற்கனவே பதிவிறக்கப்பட்டுள்ளது.</string>
+    <string name="want_to_downlaod">இந்த புத்தகத்தை பதிவிறக்க வேண்டுமா?</string>
 </resources>

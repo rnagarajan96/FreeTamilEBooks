@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -27,9 +28,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.folioreader.activity.FolioActivity;
 import com.google.gson.Gson;
 import com.jskaleel.fte.HomeActivity;
 import com.jskaleel.fte.R;
+import com.jskaleel.fte.booksdb.DbUtils;
 import com.jskaleel.fte.booksdb.DownloadedBooks;
 import com.jskaleel.fte.preferences.UserPreference;
 import com.jskaleel.fte.utils.AlertUtils;
@@ -173,6 +176,11 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void downloadPressed(BookListParser.Books.Book bookItem) {
+        if(DbUtils.isExist(bookItem.getBookid())) {
+            Toast.makeText(getActivity(), "Book Exist", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         File file = DeviceUtils.getAppDirectory(getActivity());
         if (!file.exists()) {
             file.mkdir();
@@ -197,8 +205,23 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     @Override
-    public void openPressed(BookListParser.Books.Book singleItem) {
-
+    public void openPressed(final BookListParser.Books.Book singleItem) {
+        if(DbUtils.isExist(singleItem.getBookid())) {
+            DownloadedBooks downloadedBooks = DbUtils.getSingleItem(singleItem.getBookid());
+            File file = new File(downloadedBooks.getFilePath());
+            Intent intent = new Intent(getActivity(), FolioActivity.class);
+            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
+            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, file.getPath());
+            startActivity(intent);
+        }else {
+            AlertUtils.showAlertWithYesNo(getActivity(), getString(R.string.app_name),
+                    getString(R.string.want_to_downlaod), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            downloadPressed(singleItem);
+                        }
+                    },false);
+        }
     }
 
     @Override
