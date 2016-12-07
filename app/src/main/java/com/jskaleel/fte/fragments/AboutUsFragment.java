@@ -2,9 +2,14 @@ package com.jskaleel.fte.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,10 +20,12 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.jskaleel.fte.HomeActivity;
 import com.jskaleel.fte.R;
 import com.jskaleel.fte.utils.AlertUtils;
+import com.jskaleel.fte.utils.DownloadService;
 
 public class AboutUsFragment extends Fragment {
     private WebView webView;
@@ -76,4 +83,26 @@ public class AboutUsFragment extends Fragment {
 
         webView.loadUrl("file:///android_asset/htmlfiles/about_us.html");
     }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(downloadReceiver, new IntentFilter(
+                DownloadService.DOWNLOAD_COMPLETED));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(downloadReceiver);
+    }
+
+    private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(getActivity(), getString(R.string.download_completed), Toast.LENGTH_SHORT).show();
+        }
+    };
 }

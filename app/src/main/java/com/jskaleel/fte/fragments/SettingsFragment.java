@@ -1,10 +1,15 @@
 package com.jskaleel.fte.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
@@ -12,10 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.jskaleel.fte.R;
 import com.jskaleel.fte.preferences.UserPreference;
+import com.jskaleel.fte.utils.DownloadService;
 
 import static com.jskaleel.fte.FTEApp.FCM_TOPIC;
 
@@ -65,4 +72,24 @@ public class SettingsFragment extends Fragment {
             }
         });
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(downloadReceiver, new IntentFilter(
+                DownloadService.DOWNLOAD_COMPLETED));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(downloadReceiver);
+    }
+
+    private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(getActivity(), getString(R.string.download_completed), Toast.LENGTH_SHORT).show();
+        }
+    };
 }

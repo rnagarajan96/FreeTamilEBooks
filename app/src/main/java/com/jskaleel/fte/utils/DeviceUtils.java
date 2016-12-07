@@ -28,6 +28,10 @@ public class DeviceUtils {
         return path.getAbsolutePath();
     }
 
+    public static File getAppDirectory(Context context) {
+         return new File(context.getExternalFilesDir(null) + "/ebooks");
+    }
+
     public static void hideSoftKeyboard(Context context, View paramView) {
         ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
                 paramView.getWindowToken(), 0);

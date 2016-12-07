@@ -3,12 +3,16 @@ package com.jskaleel.fte.fragments.home;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,13 +24,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jskaleel.fte.HomeActivity;
 import com.jskaleel.fte.R;
+import com.jskaleel.fte.booksdb.DownloadedBooks;
 import com.jskaleel.fte.preferences.UserPreference;
 import com.jskaleel.fte.utils.AlertUtils;
 import com.jskaleel.fte.utils.DeviceUtils;
+import com.jskaleel.fte.utils.DownloadService;
+import com.jskaleel.fte.utils.FTELog;
 import com.jskaleel.fte.utils.TextUtils;
 import com.jskaleel.fte.webservice.WebServices;
 
@@ -35,6 +43,7 @@ import org.json.JSONObject;
 import org.json.XML;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -163,14 +172,26 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void downloadPressed(BookListParser.Books.Book bookItem) {
+        File file = DeviceUtils.getAppDirectory(getActivity());
+        if (!file.exists()) {
+            file.mkdir();
+        }
+
         DownloadManager.Request requestVideo = new DownloadManager.Request(Uri.parse(bookItem.getEpub()));
-        requestVideo.setDestinationUri(Uri.parse("file://" + DeviceUtils.getStorageLocation() + "/" + bookItem.getTitle() + ".epub"));
+        String filePath = file + "/" + bookItem.getBookid();
+        requestVideo.setDestinationUri(Uri.parse("file://" + filePath));
         requestVideo.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
         requestVideo.setAllowedOverRoaming(true);
         requestVideo.setTitle(bookItem.getTitle());
         requestVideo.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
         long downloadId = mDownloadManager.enqueue(requestVideo);
         homeActivity.downloadIdList.add(downloadId);
+
+        FTELog.print("Storage Location : "+ getActivity().getExternalFilesDir(null));
+        DownloadedBooks downloadedBooks = new DownloadedBooks(bookItem.getBookid(), bookItem.getTitle(),
+                bookItem.getAuthor(), bookItem.getImage(),
+                bookItem.getEpub(), bookItem.getCategory(), downloadId, filePath, "");
+        downloadedBooks.save();
     }
 
     @Override
@@ -278,7 +299,26 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 }
             });
         }
-
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(downloadReceiver, new IntentFilter(
+                DownloadService.DOWNLOAD_COMPLETED));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(downloadReceiver);
+    }
+
+    private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(getActivity(), getString(R.string.download_completed), Toast.LENGTH_SHORT).show();
+        }
+    };
 }

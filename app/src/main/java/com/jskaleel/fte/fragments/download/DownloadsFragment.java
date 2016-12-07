@@ -2,9 +2,12 @@ package com.jskaleel.fte.fragments.download;
 
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +30,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.assent.Assent;
 import com.afollestad.assent.AssentCallback;
@@ -34,6 +39,7 @@ import com.folioreader.activity.FolioActivity;
 import com.jskaleel.fte.R;
 import com.jskaleel.fte.utils.AlertUtils;
 import com.jskaleel.fte.utils.DeviceUtils;
+import com.jskaleel.fte.utils.DownloadService;
 import com.jskaleel.fte.utils.FTELog;
 
 import java.io.File;
@@ -53,6 +59,8 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
     public void onResume() {
         super.onResume();
         Assent.setFragment(this, this);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(downloadReceiver, new IntentFilter(
+                DownloadService.DOWNLOAD_COMPLETED));
     }
 
     @Override
@@ -60,6 +68,8 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
         super.onPause();
         if (getActivity() != null && getActivity().isFinishing()) {
             Assent.setFragment(this, null);
+
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(downloadReceiver);
         }
     }
 
@@ -204,4 +214,11 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Assent.handleResult(permissions, grantResults);
     }
+
+    private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(getActivity(), getString(R.string.download_completed), Toast.LENGTH_SHORT).show();
+        }
+    };
 }
