@@ -21,22 +21,21 @@ public class DbUtils {
                 .execute();
     }
 
-    public static List<DownloadedBooks> getAllDownloadItems(){
-return new Select().from(DownloadedBooks.class).execute();
+    public static List<DownloadedBooks> getAllDownloadItems() {
+        return new Select().from(DownloadedBooks.class).execute();
     }
-
 
     public static DownloadedBooks getSingleItem(String key, String value) {
         return new Select()
                 .from(DownloadedBooks.class)
-                .where(key+" = ?", value)
+                .where(key + " = ?", value)
                 .executeSingle();
     }
 
     public static DownloadedBooks getSingleItem(String key, long value) {
         return new Select()
                 .from(DownloadedBooks.class)
-                .where(key+" = ?", value)
+                .where(key + " = ?", value)
                 .executeSingle();
     }
 

@@ -82,20 +82,11 @@ public class HomeActivity extends AppCompatActivity
             Assent.requestPermissions(new AssentCallback() {
                 @Override
                 public void onPermissionResult(PermissionResultSet result) {
-                    createFolder();
+
                 }
             }, 69, Assent.WRITE_EXTERNAL_STORAGE);
-        } else {
-            createFolder();
         }
         onTabSelected(0);
-    }
-
-    private void createFolder() {
-        File path = new File(DeviceUtils.getStorageLocation());
-        if (!path.exists()) {
-            path.mkdirs();
-        }
     }
 
     @Override

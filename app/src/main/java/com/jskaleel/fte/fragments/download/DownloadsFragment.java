@@ -1,23 +1,12 @@
 package com.jskaleel.fte.fragments.download;
 
 import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -27,11 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.assent.Assent;
@@ -42,20 +26,18 @@ import com.jskaleel.fte.R;
 import com.jskaleel.fte.booksdb.DbUtils;
 import com.jskaleel.fte.booksdb.DownloadedBooks;
 import com.jskaleel.fte.utils.AlertUtils;
-import com.jskaleel.fte.utils.DeviceUtils;
 import com.jskaleel.fte.utils.DownloadService;
-import com.jskaleel.fte.utils.FTELog;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequestPermissionsResultCallback {
+public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequestPermissionsResultCallback, DownloadedItemClicked {
     private ArrayList<String> item = null;
     private ArrayList<String> path = null;
-    private List<DownloadedBooks> downloadedBookList ;
+    private List<DownloadedBooks> downloadedBookList;
     private RecyclerView downloadsList;
-    private DownloadFragemntAdapter downloadFragemntAdapter ;
+    private DownloadFragemntAdapter downloadFragemntAdapter;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -86,24 +68,10 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
         Assent.setFragment(this, this);
 
         init(view);
+        setupDefaults();
         setupEvents();
 
         return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (!Assent.isPermissionGranted(Assent.WRITE_EXTERNAL_STORAGE)) {
-            Assent.requestPermissions(new AssentCallback() {
-                @Override
-                public void onPermissionResult(PermissionResultSet result) {
-                    setupDefaults();
-                }
-            }, 69, Assent.WRITE_EXTERNAL_STORAGE);
-        } else {
-            setupDefaults();
-        }
     }
 
     private void init(View view) {
@@ -112,7 +80,6 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
     }
 
     private void setupDefaults() {
-
         downloadsList.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -120,15 +87,13 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
 
         downloadedBookList = DbUtils.getAllDownloadItems();
 
-
-        downloadFragemntAdapter = new DownloadFragemntAdapter(getActivity(),downloadedBookList);
-        downloadFragemntAdapter.setListner(openBook);
+        downloadFragemntAdapter = new DownloadFragemntAdapter(getActivity(), downloadedBookList);
+        downloadFragemntAdapter.setListener(this);
         downloadsList.setAdapter(downloadFragemntAdapter);
-        getDir(DeviceUtils.getStorageLocation());
     }
 
     private void setupEvents() {
-        Log.e("supriya","downloaded data" + DbUtils.getAllDownloadItems().size());
+        Log.e("supriya", "downloaded data" + DbUtils.getAllDownloadItems().size());
         /*downloadsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -167,7 +132,7 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
     }
 
     public void openBook(String path) {
-        Log.d("Khaleel", "File Path : "+path);
+        Log.d("Khaleel", "File Path : " + path);
         final File file = new File(path);
 
         if (file.isDirectory()) {
@@ -204,7 +169,7 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
                         }
                     }, false);
                 }*/
-                Log.d("Khaleel", "FilePath : "+file.getPath() + "-->AbsolutePath : "+file.getAbsolutePath());
+                Log.d("Khaleel", "FilePath : " + file.getPath() + "-->AbsolutePath : " + file.getAbsolutePath());
                 Intent intent = new Intent(getActivity(), FolioActivity.class);
                 intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
                 intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, file.getPath());
@@ -212,20 +177,6 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
             } else {
                 AlertUtils.showAlert(getActivity(), getString(R.string.wrong_format));
             }
-        }
-    }
-
-    private void downloadIt(String packageName) {
-        Uri uri = Uri.parse("market://search?q=" + packageName + ".FBReader");
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-
-        try {
-            startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            String url = "https://play.google.com/store/apps/details?id=" + packageName + ".FBReader";
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(url));
-            startActivity(i);
         }
     }
 
@@ -242,16 +193,11 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
         }
     };
 
-    DownloadFragemntAdapter.OpenBook openBook = new DownloadFragemntAdapter.OpenBook() {
-        @Override
-        public void openDownloaded(DownloadedBooks singleItem) {
-            Log.e("supriya","item cliked");
-            File file = new File(singleItem.getFilePath());
-            Intent intent = new Intent(getActivity(), FolioActivity.class);
-            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
-            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, file);
-            startActivity(intent);
-        }
-    };
-
+    @Override
+    public void openDownloaded(DownloadedBooks singleItem) {
+        Intent intent = new Intent(getActivity(), FolioActivity.class);
+        intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
+        intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, singleItem.getFilePath());
+        startActivity(intent);
+    }
 }

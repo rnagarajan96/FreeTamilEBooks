@@ -13,7 +13,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jskaleel.fte.R;
 import com.jskaleel.fte.booksdb.DownloadedBooks;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +22,7 @@ import java.util.List;
 public class DownloadFragemntAdapter extends RecyclerView.Adapter<DownloadFragemntAdapter.CustomViewHolder> {
     private Context context ;
     private List<DownloadedBooks> items ;
-    private OpenBook openBookListner ;
+    private DownloadedItemClicked downloadedItemClickedListner;
 
     public DownloadFragemntAdapter(Context downloadsFragment, List<DownloadedBooks> item) {
         this.context = downloadsFragment;
@@ -49,7 +48,9 @@ public class DownloadFragemntAdapter extends RecyclerView.Adapter<DownloadFragem
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openBookListner.openDownloaded(items.get(position));
+                if(downloadedItemClickedListner != null) {
+                    downloadedItemClickedListner.openDownloaded(items.get(position));
+                }
             }
         });
     }
@@ -59,14 +60,14 @@ public class DownloadFragemntAdapter extends RecyclerView.Adapter<DownloadFragem
         return items.size();
     }
 
-    public void setListner(OpenBook openBook) {
-        this.openBookListner = openBook;
+    void setListener(DownloadedItemClicked downloadedItemClicked) {
+        this.downloadedItemClickedListner = downloadedItemClicked;
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder{
         TextView txtTitle,txtAuthor;
         ImageView imgBook;
-        public CustomViewHolder(View itemView) {
+        CustomViewHolder(View itemView) {
             super(itemView);
             txtTitle = (TextView) itemView.findViewById(R.id.txt_title);
             txtAuthor = (TextView) itemView.findViewById(R.id.txt_author);
@@ -75,7 +76,4 @@ public class DownloadFragemntAdapter extends RecyclerView.Adapter<DownloadFragem
         }
     }
 
-    interface OpenBook{
-        void openDownloaded(DownloadedBooks singleItem);
-    }
 }

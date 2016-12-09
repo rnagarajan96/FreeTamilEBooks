@@ -1,16 +1,13 @@
 package com.jskaleel.fte.fragments.home;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,11 +16,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jskaleel.fte.HomeActivity;
 import com.jskaleel.fte.R;
 import com.jskaleel.fte.booksdb.DbUtils;
-import com.jskaleel.fte.booksdb.DownloadedBooks;
-import com.jskaleel.fte.utils.FTELog;
 
 import java.util.ArrayList;
-import java.util.List;
 
 class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookViewHolder> {
     private Context context;
