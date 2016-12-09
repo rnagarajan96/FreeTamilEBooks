@@ -91,4 +91,40 @@ public class DownloadedBooks extends Model {
     public String getFilePath() {
         return filePath;
     }
+
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setEpubLink(String epubLink) {
+        this.epubLink = epubLink;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setDownloadId(long downloadId) {
+        this.downloadId = downloadId;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public void setDownloadStatus(String downloadStatus) {
+        this.downloadStatus = downloadStatus;
+    }
 }

@@ -54,6 +54,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 
@@ -207,7 +208,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void openPressed(final BookListParser.Books.Book singleItem) {
         if(DbUtils.isExist(singleItem.getBookid())) {
-            DownloadedBooks downloadedBooks = DbUtils.getSingleItem(singleItem.getBookid());
+            DownloadedBooks downloadedBooks = DbUtils.getSingleItem(DbUtils.BOOK_ID, singleItem.getBookid());
             File file = new File(downloadedBooks.getFilePath());
             Intent intent = new Intent(getActivity(), FolioActivity.class);
             intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
@@ -343,7 +344,11 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(getActivity(), getString(R.string.download_completed), Toast.LENGTH_SHORT).show();
+            if(intent != null && intent.hasExtra(DbUtils.STATUS)) {
+                if(intent.getStringExtra(DbUtils.STATUS).equals("SUCCESS")) {
+                    Toast.makeText(getActivity(), getString(R.string.download_completed), Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     };
 }

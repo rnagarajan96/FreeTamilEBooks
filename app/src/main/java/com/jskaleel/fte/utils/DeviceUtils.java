@@ -19,6 +19,9 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.jskaleel.fte.HomeActivity;
+import com.jskaleel.fte.preferences.UserPreference;
+
 import java.io.File;
 
 public class DeviceUtils {

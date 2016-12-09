@@ -18,9 +18,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jskaleel.fte.HomeActivity;
 import com.jskaleel.fte.R;
+import com.jskaleel.fte.booksdb.DbUtils;
+import com.jskaleel.fte.booksdb.DownloadedBooks;
 import com.jskaleel.fte.utils.FTELog;
 
 import java.util.ArrayList;
+import java.util.List;
 
 class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookViewHolder> {
     private Context context;
@@ -48,6 +51,15 @@ class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookViewHolde
 
         holder.txtBookTitle.setText(singleItem.title);
         holder.txtAuthorName.setText(singleItem.author);
+
+        if(DbUtils.isExist(singleItem.getBookid())) {
+            holder.txtDownload.setVisibility(View.INVISIBLE);
+            holder.txtOpen.setVisibility(View.VISIBLE);
+        }else {
+            holder.txtDownload.setVisibility(View.VISIBLE);
+            holder.txtOpen.setVisibility(View.INVISIBLE);
+        }
+
         if (!TextUtils.isEmpty(singleItem.image)) {
             Glide.with(context).load(singleItem.image)
                     .centerCrop()
@@ -61,6 +73,15 @@ class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookViewHolde
             public void onClick(View view) {
                 if (itemClickListener != null) {
                     itemClickListener.downloadPressed(singleItem);
+                }
+            }
+        });
+
+        holder.txtOpen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(itemClickListener != null) {
+                    itemClickListener.openPressed(singleItem);
                 }
             }
         });
