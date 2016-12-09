@@ -37,8 +37,7 @@
                     android:layout_height="match_parent"
                     android:contentDescription="@string/app_name"
                     android:padding="3dp"
-                    android:background="@android:color/darker_gray"
-                    android:scaleType="centerInside" />
+                    android:scaleType="centerCrop" />
             </RelativeLayout>
 
             <TextView

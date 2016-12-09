@@ -39,6 +39,8 @@ import com.afollestad.assent.AssentCallback;
 import com.afollestad.assent.PermissionResultSet;
 import com.folioreader.activity.FolioActivity;
 import com.jskaleel.fte.R;
+import com.jskaleel.fte.booksdb.DbUtils;
+import com.jskaleel.fte.booksdb.DownloadedBooks;
 import com.jskaleel.fte.utils.AlertUtils;
 import com.jskaleel.fte.utils.DeviceUtils;
 import com.jskaleel.fte.utils.DownloadService;
@@ -46,10 +48,12 @@ import com.jskaleel.fte.utils.FTELog;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequestPermissionsResultCallback {
     private ArrayList<String> item = null;
     private ArrayList<String> path = null;
+    private List<DownloadedBooks> downloadedBookList ;
     private RecyclerView downloadsList;
     private DownloadFragemntAdapter downloadFragemntAdapter ;
 
@@ -104,7 +108,7 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
 
     private void init(View view) {
         downloadsList = (RecyclerView) view.findViewById(R.id.download_list);
-     //   downloadsList.setEmptyView(view.findViewById(R.id.empty));
+        downloadedBookList = new ArrayList<>();
     }
 
     private void setupDefaults() {
@@ -114,12 +118,17 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         downloadsList.setLayoutManager(layoutManager);
 
-        downloadFragemntAdapter = new DownloadFragemntAdapter(getActivity(),item);
-downloadsList.setAdapter(downloadFragemntAdapter);
+        downloadedBookList = DbUtils.getAllDownloadItems();
+
+
+        downloadFragemntAdapter = new DownloadFragemntAdapter(getActivity(),downloadedBookList);
+        downloadFragemntAdapter.setListner(openBook);
+        downloadsList.setAdapter(downloadFragemntAdapter);
         getDir(DeviceUtils.getStorageLocation());
     }
 
     private void setupEvents() {
+        Log.e("supriya","downloaded data" + DbUtils.getAllDownloadItems().size());
         /*downloadsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -232,4 +241,17 @@ downloadsList.setAdapter(downloadFragemntAdapter);
             Toast.makeText(getActivity(), getString(R.string.download_completed), Toast.LENGTH_SHORT).show();
         }
     };
+
+    DownloadFragemntAdapter.OpenBook openBook = new DownloadFragemntAdapter.OpenBook() {
+        @Override
+        public void openDownloaded(DownloadedBooks singleItem) {
+            Log.e("supriya","item cliked");
+            File file = new File(singleItem.getFilePath());
+            Intent intent = new Intent(getActivity(), FolioActivity.class);
+            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
+            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, file);
+            startActivity(intent);
+        }
+    };
+
 }

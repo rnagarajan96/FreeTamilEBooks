@@ -5,21 +5,27 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jskaleel.fte.R;
+import com.jskaleel.fte.booksdb.DownloadedBooks;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Home on 12/6/2016.
  */
 
 public class DownloadFragemntAdapter extends RecyclerView.Adapter<DownloadFragemntAdapter.CustomViewHolder> {
-    Context context ;
-    ArrayList<String> items ;
+    private Context context ;
+    private List<DownloadedBooks> items ;
+    private OpenBook openBookListner ;
 
-    public DownloadFragemntAdapter(Context downloadsFragment, ArrayList<String> item) {
+    public DownloadFragemntAdapter(Context downloadsFragment, List<DownloadedBooks> item) {
         this.context = downloadsFragment;
         this.items = item;
     }
@@ -32,22 +38,44 @@ public class DownloadFragemntAdapter extends RecyclerView.Adapter<DownloadFragem
     }
 
     @Override
-    public void onBindViewHolder(DownloadFragemntAdapter.CustomViewHolder holder, int position) {
+    public void onBindViewHolder(DownloadFragemntAdapter.CustomViewHolder holder, final int position) {
+        holder.txtAuthor.setText(items.get(position).getAuthor());
+        holder.txtTitle.setText(items.get(position).getBookTitle());
+        Glide.with(context)
+                .load(items.get(position).getImageUrl())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.imgBook);
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openBookListner.openDownloaded(items.get(position));
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return items.size();
+    }
+
+    public void setListner(OpenBook openBook) {
+        this.openBookListner = openBook;
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder{
         TextView txtTitle,txtAuthor;
+        ImageView imgBook;
         public CustomViewHolder(View itemView) {
             super(itemView);
             txtTitle = (TextView) itemView.findViewById(R.id.txt_title);
             txtAuthor = (TextView) itemView.findViewById(R.id.txt_author);
+            imgBook = (ImageView) itemView.findViewById(R.id.iv_book_image);
 
         }
+    }
+
+    interface OpenBook{
+        void openDownloaded(DownloadedBooks singleItem);
     }
 }
