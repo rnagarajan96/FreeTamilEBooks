@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -15,15 +14,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.jskaleel.fte.R;
-import com.jskaleel.fte.utils.AlertUtils;
 import com.jskaleel.fte.utils.DownloadService;
 import com.jskaleel.fte.utils.TextUtils;
-import com.jskaleel.fte.webservice.WebServices;
 
 public class CommentsFragment extends Fragment {
 

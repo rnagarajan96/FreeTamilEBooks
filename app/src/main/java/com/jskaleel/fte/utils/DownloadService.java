@@ -10,8 +10,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.jskaleel.fte.booksdb.DbUtils;
 import com.jskaleel.fte.booksdb.DownloadedBooks;
 
-import java.util.Date;
-
 /**
  * Created by khaleeljageer on 06-12-2016.
  */
