@@ -2,6 +2,7 @@ package com.jskaleel.fte.fragments.download;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jskaleel.fte.R;
 import com.jskaleel.fte.booksdb.DownloadedBooks;
+import com.jskaleel.fte.utils.AlertUtils;
 
 import java.util.List;
 
@@ -43,9 +45,10 @@ public class DownloadFragemntAdapter extends RecyclerView.Adapter<DownloadFragem
         holder.txtAuthor.setText(singleBook.getAuthor());
         holder.txtTitle.setText(singleBook.getBookTitle());
 
-        holder.ivFavourite.setVisibility(View.GONE);
+        holder.ivFavourite.setVisibility(View.VISIBLE);
         holder.txtDownload.setVisibility(View.GONE);
 
+        holder.ivFavourite.setImageResource(R.drawable.ic_close_black);
         holder.txtOpen.setVisibility(View.VISIBLE);
 
         Glide.with(context)
@@ -70,6 +73,13 @@ public class DownloadFragemntAdapter extends RecyclerView.Adapter<DownloadFragem
                 }
             }
         });
+
+        holder.ivFavourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                downloadedItemClickedListner.deleteItem(singleBook,position);
+            }
+        });
     }
 
     @Override
@@ -81,11 +91,16 @@ public class DownloadFragemntAdapter extends RecyclerView.Adapter<DownloadFragem
         this.downloadedItemClickedListner = downloadedItemClicked;
     }
 
+    public void removeDeleteItem(List<DownloadedBooks> list, int position) {
+        items.remove(position);
+        notifyDataSetChanged();
+    }
+
     class CustomViewHolder extends RecyclerView.ViewHolder{
         TextView txtTitle,txtAuthor, txtDownload, txtOpen;
         ImageView ivBookImage, ivFavourite;
         RelativeLayout rlItemView;
-        
+
         CustomViewHolder(View itemView) {
             super(itemView);
             rlItemView = (RelativeLayout) itemView.findViewById(R.id.rl_item_view);
