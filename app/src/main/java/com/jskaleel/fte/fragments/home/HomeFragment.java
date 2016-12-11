@@ -255,7 +255,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             InputStream is = null;
 
             try {
-                URL feedUrl = new URL(WebServices.XML_URL);
+                URL feedUrl = new URL(getString(R.string.web_url));
                 HttpURLConnection conn = (HttpURLConnection) feedUrl.openConnection();
 
                 conn.setReadTimeout(60000);
@@ -312,7 +312,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             onRefresh();
             return true;
         } else if (id == R.id.menu_source) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(WebServices.SOURCE_CODE_URL));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.repo_url)));
             startActivity(browserIntent);
             return true;
         } else if (id == R.id.ic_search) {

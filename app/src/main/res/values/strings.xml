@@ -61,4 +61,6 @@
 
     <string name="static_quote">உண்மையான வாசகன், வாசிப்பதை முடிப்பதே இல்லை!</string>
     <string name="quote_author">– ஆஸ்கார் வைல்ட்</string>
+    <string name="web_url">https://raw.githubusercontent.com/kishorek/Free-Tamil-Ebooks/master/booksdb.xml</string>
+    <string name="repo_url">https://github.com/jskcse4/FreeTamilEBooks-Gradle</string>
 </resources>
