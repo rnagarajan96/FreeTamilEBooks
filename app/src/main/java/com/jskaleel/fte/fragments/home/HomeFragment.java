@@ -38,7 +38,6 @@ import com.jskaleel.fte.utils.DeviceUtils;
 import com.jskaleel.fte.utils.DownloadService;
 import com.jskaleel.fte.utils.FTELog;
 import com.jskaleel.fte.utils.TextUtils;
-import com.jskaleel.fte.webservice.WebServices;
 
 import org.json.JSONException;
 import org.json.JSONObject;
