@@ -1,5 +1,6 @@
 package com.jskaleel.fte.booksdb;
 
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 
 import java.util.List;
@@ -37,6 +38,10 @@ public class DbUtils {
                 .from(DownloadedBooks.class)
                 .where(key + " = ?", value)
                 .executeSingle();
+    }
+
+    public static List<DownloadedBooks>  removeDownloadedItem(String bookId){
+       return new Delete().from(DownloadedBooks.class).where("book_id" +" = ?",bookId).execute();
     }
 
     public static Boolean isExist(String bookId) {

@@ -117,4 +117,11 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
     public void openDownloaded(DownloadedBooks singleItem) {
         DeviceUtils.openBook(getActivity(), singleItem.getFilePath());
     }
+
+    @Override
+    public void deleteItem(DownloadedBooks singleItem,int position) {
+        downloadedBookList = DbUtils.removeDownloadedItem(singleItem.getBookId());
+        downloadFragemntAdapter.removeDeleteItem(downloadedBookList,position);
+        //DbUtils.removeDownloadedItem(singleItem.getBookId());
+    }
 }

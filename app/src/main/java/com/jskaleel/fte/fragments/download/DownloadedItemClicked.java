@@ -4,4 +4,5 @@ import com.jskaleel.fte.booksdb.DownloadedBooks;
 
 interface DownloadedItemClicked {
     void openDownloaded(DownloadedBooks singleItem);
+    void deleteItem(DownloadedBooks bookId,int position);
 }
