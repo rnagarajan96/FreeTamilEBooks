@@ -40,11 +40,15 @@ public class DbUtils {
                 .executeSingle();
     }
 
-    public static List<DownloadedBooks>  removeDownloadedItem(String bookId){
+    public static List<DownloadedBooks> removeDownloadedItem(String bookId){
        return new Delete().from(DownloadedBooks.class).where("book_id" +" = ?",bookId).execute();
     }
 
     public static Boolean isExist(String bookId) {
         return new Select().from(DownloadedBooks.class).where("book_id = ?", bookId).exists();
+    }
+
+    public static boolean isSuccess(String bookId) {
+        return new Select().from(DownloadedBooks.class).where("book_id = ?", bookId).and("download_status = ?", "SUCCESS").exists();
     }
 }

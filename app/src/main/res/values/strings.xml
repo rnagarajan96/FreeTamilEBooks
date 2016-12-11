@@ -53,8 +53,12 @@
     <string name="ebook_reader">மின்னூல் படிப்பான்</string>
     <string name="ebook_reader_title">மின்னூல் படிப்பானை தேர்வுசெய்க</string>
     <string name="are_you_sure_want_to_remove_from_downloads">Are you sure want to remove book from download list</string>
+    <string name="book_not_downloaded">புத்தகம் முழுவதுமாக பதிவிறக்கப்படவில்லை&#8230;</string>
     <string-array name="reader_type">
         <item>உள்ளிருப்பு</item>
         <item>மற்றவை</item>
     </string-array>
+
+    <string name="static_quote">உண்மையான வாசகன், வாசிப்பதை முடிப்பதே இல்லை!</string>
+    <string name="quote_author">– ஆஸ்கார் வைல்ட்</string>
 </resources>

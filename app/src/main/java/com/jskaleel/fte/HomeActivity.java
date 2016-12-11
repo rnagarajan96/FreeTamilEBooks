@@ -1,11 +1,15 @@
 package com.jskaleel.fte;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -13,10 +17,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.assent.Assent;
 import com.afollestad.assent.AssentCallback;
 import com.afollestad.assent.PermissionResultSet;
+import com.crashlytics.android.Crashlytics;
 import com.jskaleel.fte.fragments.AboutUsFragment;
 import com.jskaleel.fte.fragments.CommentsFragment;
 import com.jskaleel.fte.fragments.ContributorsFragment;
@@ -24,6 +31,8 @@ import com.jskaleel.fte.fragments.HelpUsFragment;
 import com.jskaleel.fte.fragments.SettingsFragment;
 import com.jskaleel.fte.fragments.download.DownloadsFragment;
 import com.jskaleel.fte.fragments.home.HomeFragment;
+import com.jskaleel.fte.utils.DeviceUtils;
+import com.jskaleel.fte.utils.DownloadService;
 
 import java.util.ArrayList;
 
@@ -66,6 +75,8 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void init() {
+        Crashlytics.setUserIdentifier(DeviceUtils.getUUID());
+
         downloadIdList = new ArrayList<>();
         if (!Assent.isPermissionGranted(Assent.WRITE_EXTERNAL_STORAGE)) {
             Assent.requestPermissions(new AssentCallback() {
@@ -183,12 +194,22 @@ public class HomeActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         Assent.setActivity(this, this);
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(downloadReceiver, new IntentFilter(
+                DownloadService.DOWNLOAD_COMPLETED));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(downloadReceiver);
         if (isFinishing())
             Assent.setActivity(this, null);
     }
+
+    private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(getApplicationContext(), getString(R.string.download_completed), Toast.LENGTH_SHORT).show();
+        }
+    };
 }

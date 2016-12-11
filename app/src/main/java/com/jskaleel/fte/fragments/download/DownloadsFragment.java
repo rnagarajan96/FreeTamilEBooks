@@ -1,20 +1,16 @@
 package com.jskaleel.fte.fragments.download;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.assent.Assent;
@@ -23,8 +19,9 @@ import com.afollestad.assent.PermissionResultSet;
 import com.jskaleel.fte.R;
 import com.jskaleel.fte.booksdb.DbUtils;
 import com.jskaleel.fte.booksdb.DownloadedBooks;
+import com.jskaleel.fte.preferences.UserPreference;
 import com.jskaleel.fte.utils.DeviceUtils;
-import com.jskaleel.fte.utils.DownloadService;
+import com.jskaleel.fte.utils.FTELog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +31,7 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
     private List<DownloadedBooks> downloadedBookList;
     private RecyclerView downloadsList;
     private DownloadFragemntAdapter downloadFragemntAdapter;
+    private TextView txtEmptyView;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -44,8 +42,6 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
     public void onResume() {
         super.onResume();
         Assent.setFragment(this, this);
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(downloadReceiver, new IntentFilter(
-                DownloadService.DOWNLOAD_COMPLETED));
     }
 
     @Override
@@ -53,8 +49,6 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
         super.onPause();
         if (getActivity() != null && getActivity().isFinishing()) {
             Assent.setFragment(this, null);
-
-            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(downloadReceiver);
         }
     }
 
@@ -81,6 +75,8 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
 
         downloadsList = (RecyclerView) view.findViewById(R.id.download_list);
         downloadedBookList = new ArrayList<>();
+
+        txtEmptyView = (TextView) view.findViewById(R.id.empty);
     }
 
     private void setupDefaults() {
@@ -90,10 +86,17 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
         downloadsList.setLayoutManager(layoutManager);
 
         downloadedBookList = DbUtils.getAllDownloadItems();
-
-        downloadFragemntAdapter = new DownloadFragemntAdapter(getActivity(), downloadedBookList);
-        downloadFragemntAdapter.setListener(this);
-        downloadsList.setAdapter(downloadFragemntAdapter);
+        FTELog.print("Size : "+downloadedBookList.size());
+        if(downloadedBookList.size() > 0) {
+            downloadsList.setVisibility(View.VISIBLE);
+            txtEmptyView.setVisibility(View.GONE);
+            downloadFragemntAdapter = new DownloadFragemntAdapter(getActivity(), downloadedBookList);
+            downloadFragemntAdapter.setListener(this);
+            downloadsList.setAdapter(downloadFragemntAdapter);
+        }else {
+            downloadsList.setVisibility(View.GONE);
+            txtEmptyView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setupEvents() {
@@ -106,22 +109,23 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
         Assent.handleResult(permissions, grantResults);
     }
 
-    private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Toast.makeText(getActivity(), getString(R.string.download_completed), Toast.LENGTH_SHORT).show();
-        }
-    };
-
     @Override
     public void openDownloaded(DownloadedBooks singleItem) {
-        DeviceUtils.openBook(getActivity(), singleItem.getFilePath());
+        if (DbUtils.isSuccess(singleItem.getBookId())) {
+            UserPreference userPreference = UserPreference.getInstance(getActivity());
+            if(userPreference.getReaderType() == 0) {
+                DeviceUtils.openAppReader(getActivity(), singleItem.getFilePath());
+            }else {
+                DeviceUtils.openSystemReader(getActivity(), singleItem.getFilePath());
+            }
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.book_not_downloaded), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
-    public void deleteItem(DownloadedBooks singleItem,int position) {
-        downloadedBookList = DbUtils.removeDownloadedItem(singleItem.getBookId());
-        downloadFragemntAdapter.removeDeleteItem(downloadedBookList,position);
-        //DbUtils.removeDownloadedItem(singleItem.getBookId());
+    public void deleteItem(DownloadedBooks singleItem, int position) {
+        List<DownloadedBooks> downloadedBooks = DbUtils.removeDownloadedItem(singleItem.getBookId());
+        downloadFragemntAdapter.removeDeleteItem(downloadedBooks, position);
     }
 }

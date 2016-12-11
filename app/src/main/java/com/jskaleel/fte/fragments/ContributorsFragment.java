@@ -73,24 +73,4 @@ public class ContributorsFragment extends Fragment {
 
         webView.loadUrl("file:///android_asset/htmlfiles/team.html");
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(downloadReceiver, new IntentFilter(
-                DownloadService.DOWNLOAD_COMPLETED));
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(downloadReceiver);
-    }
-
-    private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Toast.makeText(getActivity(), getString(R.string.download_completed), Toast.LENGTH_SHORT).show();
-        }
-    };
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Environment;
@@ -17,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.folioreader.activity.FolioActivity;
 
 import java.io.File;
+import java.util.UUID;
 
 public class DeviceUtils {
 
@@ -69,11 +71,22 @@ public class DeviceUtils {
         }
     }
 
-    public static void openBook(Context context, String filePath) {
+    public static void openAppReader(Context context, String filePath) {
         Intent intent = new Intent(context, FolioActivity.class);
         intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
         intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, filePath);
         context.startActivity(intent);
+    }
+
+    public static void openSystemReader(Context context, String filePath) {
+        Intent i = new Intent();
+        i.setAction(android.content.Intent.ACTION_VIEW);
+        i.setDataAndType(Uri.fromFile(new File(filePath)), "application/epub+zip");
+        context.startActivity(i);
+    }
+
+    public static String getUUID() {
+        return UUID.randomUUID().toString();
     }
 }
 

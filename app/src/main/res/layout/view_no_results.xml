@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:minHeight="60dp"
-        android:singleLine="true"
+        android:maxLines="1"
         android:text="@string/no_books"
         android:textColor="@color/primary_text"
         android:textSize="16sp" />

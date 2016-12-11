@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.jskaleel.fte.booksdb.DbUtils;
 import com.jskaleel.fte.booksdb.DownloadedBooks;
@@ -45,8 +46,9 @@ public class DownloadService extends BroadcastReceiver {
     }
 
     private void sendBroadcastMessage(Context context, long downloadId, String status) {
+        FTELog.print("Khaleel : Status......" + status);
         DownloadedBooks downloadBooks = DbUtils.getSingleItem(DbUtils.DOWNLOAD_ID, downloadId);
-        if(downloadBooks != null) {
+        if (downloadBooks != null) {
             downloadBooks.setDownloadStatus(status);
             downloadBooks.save();
 

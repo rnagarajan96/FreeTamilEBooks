@@ -191,7 +191,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         Log.e("supriya ","uri " +bookItem.getEpub());
         DownloadManager.Request requestBook = new DownloadManager.Request(Uri.parse(bookItem.getEpub()));
-        String filePath = file + "/" + bookItem.getBookid();
+        String filePath = file + "/" + bookItem.getTitle();
         requestBook.setDestinationUri(Uri.parse("file://" + filePath));
         requestBook.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
         requestBook.setAllowedOverRoaming(true);
@@ -211,8 +211,17 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void openPressed(final BookListParser.Books.Book singleItem) {
         if(DbUtils.isExist(singleItem.getBookid())) {
-            DownloadedBooks downloadedBooks = DbUtils.getSingleItem(DbUtils.BOOK_ID, singleItem.getBookid());
-            DeviceUtils.openBook(getActivity(), downloadedBooks.getFilePath());
+            if(DbUtils.isSuccess(singleItem.getBookid())) {
+                DownloadedBooks downloadedBooks = DbUtils.getSingleItem(DbUtils.BOOK_ID, singleItem.getBookid());
+                UserPreference userPreference = UserPreference.getInstance(getActivity());
+                if(userPreference.getReaderType() == 0) {
+                    DeviceUtils.openAppReader(getActivity(), downloadedBooks.getFilePath());
+                }else {
+                    DeviceUtils.openSystemReader(getActivity(), downloadedBooks.getFilePath());
+                }
+            }else {
+                Toast.makeText(getActivity(), getString(R.string.book_not_downloaded), Toast.LENGTH_LONG).show();
+            }
         }else {
             AlertUtils.showAlertWithYesNo(getActivity(), getString(R.string.app_name),
                     getString(R.string.want_to_downlaod), new DialogInterface.OnClickListener() {
@@ -313,7 +322,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-
                     return false;
                 }
 
@@ -348,7 +356,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     if(bookListAdapter != null) {
                         bookListAdapter.notifyDataSetChanged();
                     }
-                    Toast.makeText(getActivity(), getString(R.string.download_completed), Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(context, "failed", Toast.LENGTH_LONG).show();
                     long downloadId = intent.getExtras().getLong(DbUtils.DOWNLOAD_ID);
