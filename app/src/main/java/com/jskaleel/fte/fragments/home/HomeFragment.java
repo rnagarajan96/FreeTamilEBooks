@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,7 +27,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.folioreader.activity.FolioActivity;
 import com.google.gson.Gson;
 import com.jskaleel.fte.HomeActivity;
 import com.jskaleel.fte.R;
@@ -54,7 +52,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 
@@ -178,27 +175,33 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void downloadPressed(BookListParser.Books.Book bookItem) {
         if(DbUtils.isExist(bookItem.getBookid())) {
-            Toast.makeText(getActivity(), "Book Exist", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.book_already_exist), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(!DeviceUtils.isInternetConnected(getActivity())) {
+            Toast.makeText(getActivity(), getString(R.string.check_connection), Toast.LENGTH_LONG).show();
             return;
         }
 
         File file = DeviceUtils.getAppDirectory(getActivity());
         if (!file.exists()) {
-            file.mkdir();
+            file.mkdirs();
         }
 
         Log.e("supriya ","uri " +bookItem.getEpub());
-        DownloadManager.Request requestVideo = new DownloadManager.Request(Uri.parse(bookItem.getEpub()));
+        DownloadManager.Request requestBook = new DownloadManager.Request(Uri.parse(bookItem.getEpub()));
         String filePath = file + "/" + bookItem.getBookid();
-        requestVideo.setDestinationUri(Uri.parse("file://" + filePath));
-        requestVideo.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-        requestVideo.setAllowedOverRoaming(true);
-        requestVideo.setTitle(bookItem.getTitle());
-        requestVideo.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-        long downloadId = mDownloadManager.enqueue(requestVideo);
+        requestBook.setDestinationUri(Uri.parse("file://" + filePath));
+        requestBook.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+        requestBook.setAllowedOverRoaming(true);
+        requestBook.setTitle(bookItem.getTitle());
+        requestBook.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+        long downloadId = mDownloadManager.enqueue(requestBook);
         homeActivity.downloadIdList.add(downloadId);
-
+        Toast.makeText(getActivity(), getString(R.string.download_started), Toast.LENGTH_SHORT).show();
         FTELog.print("Storage Location : "+ getActivity().getExternalFilesDir(null));
+
         DownloadedBooks downloadedBooks = new DownloadedBooks(bookItem.getBookid(), bookItem.getTitle(),
                 bookItem.getAuthor(), bookItem.getImage(),
                 bookItem.getEpub(), bookItem.getCategory(), downloadId, filePath, "");
@@ -209,11 +212,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void openPressed(final BookListParser.Books.Book singleItem) {
         if(DbUtils.isExist(singleItem.getBookid())) {
             DownloadedBooks downloadedBooks = DbUtils.getSingleItem(DbUtils.BOOK_ID, singleItem.getBookid());
-            File file = new File(downloadedBooks.getFilePath());
-            Intent intent = new Intent(getActivity(), FolioActivity.class);
-            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
-            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, file.getPath());
-            startActivity(intent);
+            DeviceUtils.openBook(getActivity(), downloadedBooks.getFilePath());
         }else {
             AlertUtils.showAlertWithYesNo(getActivity(), getString(R.string.app_name),
                     getString(R.string.want_to_downlaod), new DialogInterface.OnClickListener() {
@@ -346,7 +345,14 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         public void onReceive(Context context, Intent intent) {
             if(intent != null && intent.hasExtra(DbUtils.STATUS)) {
                 if(intent.getStringExtra(DbUtils.STATUS).equals("SUCCESS")) {
+                    if(bookListAdapter != null) {
+                        bookListAdapter.notifyDataSetChanged();
+                    }
                     Toast.makeText(getActivity(), getString(R.string.download_completed), Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(context, "failed", Toast.LENGTH_LONG).show();
+                    long downloadId = intent.getExtras().getLong(DbUtils.DOWNLOAD_ID);
+                    mDownloadManager.remove(downloadId);
                 }
             }
         }

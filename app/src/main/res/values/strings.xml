@@ -34,7 +34,7 @@
     <string name="mail_alert">மின்னஞ்சல் காலியாக இருக்கக் கூடாது</string>
     <string name="nomail_alert">சரியான மின்னஞ்சல் முகவரியை உள்ளிடவும்!!!</string>
     <string name="message_alert">உங்கள் கருத்தை உள்ளிடவும்</string>
-    <string name="check_connection">இந்த செயலியை பயன்படுத்த இணைய இணைப்பு தேவை&#8230;</string>
+    <string name="check_connection">இணைய இணைப்பை சரிபார்க்கவும்&#8230;</string>
     <string name="yes">ஆம்</string>
     <string name="no">இல்லை</string>
     <string name="down_epub">மின் புத்தகங்களை படிக்க FBReader தேவைப்படுகிறது&#8230;\nபதிவிறக்க வேண்டுமா?</string>
@@ -48,4 +48,12 @@
     <string name="set">அமை</string>
     <string name="book_already_exist">புத்தகம் ஏற்கனவே பதிவிறக்கப்பட்டுள்ளது.</string>
     <string name="want_to_downlaod">இந்த புத்தகத்தை பதிவிறக்க வேண்டுமா?</string>
+    <string name="download_started">பதிவிறக்கம் தொடங்கியது</string>
+
+    <string name="ebook_reader">மின்னூல் படிப்பான்</string>
+    <string name="ebook_reader_title">மின்னூல் படிப்பானை தேர்வுசெய்க</string>
+    <string-array name="reader_type">
+        <item>உள்ளிருப்பு</item>
+        <item>மற்றவை</item>
+    </string-array>
 </resources>

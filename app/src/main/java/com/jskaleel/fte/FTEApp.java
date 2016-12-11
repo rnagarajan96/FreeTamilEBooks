@@ -1,7 +1,6 @@
 package com.jskaleel.fte;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.activeandroid.ActiveAndroid;
 import com.crashlytics.android.Crashlytics;

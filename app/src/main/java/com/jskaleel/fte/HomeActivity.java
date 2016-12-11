@@ -1,13 +1,7 @@
 package com.jskaleel.fte;
 
-import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -18,9 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.afollestad.assent.Assent;
 import com.afollestad.assent.AssentCallback;
@@ -32,10 +24,7 @@ import com.jskaleel.fte.fragments.HelpUsFragment;
 import com.jskaleel.fte.fragments.SettingsFragment;
 import com.jskaleel.fte.fragments.download.DownloadsFragment;
 import com.jskaleel.fte.fragments.home.HomeFragment;
-import com.jskaleel.fte.utils.DeviceUtils;
-import com.jskaleel.fte.webservice.WebServices;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity

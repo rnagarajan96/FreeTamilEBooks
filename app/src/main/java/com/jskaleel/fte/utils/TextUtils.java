@@ -1,9 +1,5 @@
 package com.jskaleel.fte.utils;
 
-import android.util.Base64;
-import android.widget.EditText;
-import android.widget.TextView;
-
 import java.util.ArrayList;
 
 public class TextUtils {

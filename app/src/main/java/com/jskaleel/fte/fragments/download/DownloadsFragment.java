@@ -1,6 +1,5 @@
 package com.jskaleel.fte.fragments.download;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,20 +20,17 @@ import android.widget.Toast;
 import com.afollestad.assent.Assent;
 import com.afollestad.assent.AssentCallback;
 import com.afollestad.assent.PermissionResultSet;
-import com.folioreader.activity.FolioActivity;
 import com.jskaleel.fte.R;
 import com.jskaleel.fte.booksdb.DbUtils;
 import com.jskaleel.fte.booksdb.DownloadedBooks;
-import com.jskaleel.fte.utils.AlertUtils;
+import com.jskaleel.fte.utils.DeviceUtils;
 import com.jskaleel.fte.utils.DownloadService;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequestPermissionsResultCallback, DownloadedItemClicked {
-    private ArrayList<String> item = null;
-    private ArrayList<String> path = null;
+public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequestPermissionsResultCallback,
+        DownloadedItemClicked {
     private List<DownloadedBooks> downloadedBookList;
     private RecyclerView downloadsList;
     private DownloadFragemntAdapter downloadFragemntAdapter;
@@ -75,6 +71,14 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
     }
 
     private void init(View view) {
+        if (!Assent.isPermissionGranted(Assent.WRITE_EXTERNAL_STORAGE)) {
+            Assent.requestPermissions(new AssentCallback() {
+                @Override
+                public void onPermissionResult(PermissionResultSet result) {
+                }
+            }, 69, Assent.WRITE_EXTERNAL_STORAGE);
+        }
+
         downloadsList = (RecyclerView) view.findViewById(R.id.download_list);
         downloadedBookList = new ArrayList<>();
     }
@@ -94,90 +98,6 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
 
     private void setupEvents() {
         Log.e("supriya", "downloaded data" + DbUtils.getAllDownloadItems().size());
-        /*downloadsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                openBook(path.get(position));
-            }
-        });*/
-    }
-
-    private void getDir(String dirPath) {
-
-        item = new ArrayList<>();
-        path = new ArrayList<>();
-        File f = new File(dirPath);
-        File[] files = f.listFiles();
-
-        if (!dirPath.equals(dirPath)) {
-            item.add(dirPath);
-            path.add(dirPath);
-            item.add("../");
-            path.add(f.getParent());
-        }
-
-        if (files != null && files.length > 0) {
-            for (File file : files) {
-                if (!file.isHidden() && file.canRead()) {
-                    path.add(file.getPath());
-                    if (!file.isDirectory()) {
-                        item.add(file.getName());
-                    }
-                }
-            }
-        }
-
-       /* ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, item);
-        downloadsList.setAdapter(adapter);*/
-    }
-
-    public void openBook(String path) {
-        Log.d("Khaleel", "File Path : " + path);
-        final File file = new File(path);
-
-        if (file.isDirectory()) {
-            if (file.canRead()) {
-                if (!Assent.isPermissionGranted(Assent.WRITE_EXTERNAL_STORAGE)) {
-                    Assent.requestPermissions(new AssentCallback() {
-                        @Override
-                        public void onPermissionResult(PermissionResultSet result) {
-                            getDir(file.toString());
-                        }
-                    }, 69, Assent.WRITE_EXTERNAL_STORAGE);
-                } else {
-                    getDir(file.toString());
-                }
-            } else {
-                new AlertDialog.Builder(getActivity()).setTitle("[" + file.getName() + "] folder can't be read!").setPositiveButton("Ok", null).show();
-            }
-        } else {
-            String extension = (file.toString()).substring(((file.toString()).lastIndexOf(".") + 1), (file.toString()).length());
-
-            if (extension.equals("epub")) {
-                /*Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setDataAndType(Uri.fromFile(file), "application/epub");
-                ComponentName cn = new ComponentName("org.geometerplus.zlibrary.ui.android", "org.geometerplus.android.fbreader.FBReader");
-                intent.setComponent(cn);
-                try {
-                    startActivity(intent);
-                } catch (ActivityNotFoundException e) {
-                    AlertUtils.showAlertWithYesNo(getActivity(), "", getString(R.string.down_epub), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            downloadIt("org.geometerplus.zlibrary.ui.android");
-                        }
-                    }, false);
-                }*/
-                Log.d("Khaleel", "FilePath : " + file.getPath() + "-->AbsolutePath : " + file.getAbsolutePath());
-                Intent intent = new Intent(getActivity(), FolioActivity.class);
-                intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
-                intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, file.getPath());
-                startActivity(intent);
-            } else {
-                AlertUtils.showAlert(getActivity(), getString(R.string.wrong_format));
-            }
-        }
     }
 
     @Override
@@ -195,9 +115,6 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
 
     @Override
     public void openDownloaded(DownloadedBooks singleItem) {
-        Intent intent = new Intent(getActivity(), FolioActivity.class);
-        intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
-        intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, singleItem.getFilePath());
-        startActivity(intent);
+        DeviceUtils.openBook(getActivity(), singleItem.getFilePath());
     }
 }

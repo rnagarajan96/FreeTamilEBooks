@@ -1,26 +1,20 @@
 package com.jskaleel.fte.utils;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.res.Configuration;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.v4.content.ContextCompat;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
-import com.jskaleel.fte.HomeActivity;
-import com.jskaleel.fte.preferences.UserPreference;
+import com.folioreader.activity.FolioActivity;
 
 import java.io.File;
 
@@ -73,6 +67,13 @@ public class DeviceUtils {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(context, colorId));
         }
+    }
+
+    public static void openBook(Context context, String filePath) {
+        Intent intent = new Intent(context, FolioActivity.class);
+        intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
+        intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, filePath);
+        context.startActivity(intent);
     }
 }
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -31,25 +32,41 @@ public class DownloadFragemntAdapter extends RecyclerView.Adapter<DownloadFragem
 
     @Override
     public DownloadFragemntAdapter.CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemLayout = LayoutInflater.from(parent.getContext()).inflate(R.layout.download_books_list_item, parent, false);
+        View itemLayout = LayoutInflater.from(parent.getContext()).inflate(R.layout.books_list_item, parent, false);
 
         return new CustomViewHolder(itemLayout);
     }
 
     @Override
     public void onBindViewHolder(DownloadFragemntAdapter.CustomViewHolder holder, final int position) {
-        holder.txtAuthor.setText(items.get(position).getAuthor());
-        holder.txtTitle.setText(items.get(position).getBookTitle());
-        Glide.with(context)
-                .load(items.get(position).getImageUrl())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.imgBook);
+        final DownloadedBooks singleBook = items.get(position);
+        holder.txtAuthor.setText(singleBook.getAuthor());
+        holder.txtTitle.setText(singleBook.getBookTitle());
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.ivFavourite.setVisibility(View.GONE);
+        holder.txtDownload.setVisibility(View.GONE);
+
+        holder.txtOpen.setVisibility(View.VISIBLE);
+
+        Glide.with(context)
+                .load(singleBook.getImageUrl())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.ivBookImage);
+
+        holder.rlItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(downloadedItemClickedListner != null) {
-                    downloadedItemClickedListner.openDownloaded(items.get(position));
+                    downloadedItemClickedListner.openDownloaded(singleBook);
+                }
+            }
+        });
+
+        holder.txtOpen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(downloadedItemClickedListner != null) {
+                    downloadedItemClickedListner.openDownloaded(singleBook);
                 }
             }
         });
@@ -65,14 +82,19 @@ public class DownloadFragemntAdapter extends RecyclerView.Adapter<DownloadFragem
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder{
-        TextView txtTitle,txtAuthor;
-        ImageView imgBook;
+        TextView txtTitle,txtAuthor, txtDownload, txtOpen;
+        ImageView ivBookImage, ivFavourite;
+        RelativeLayout rlItemView;
+        
         CustomViewHolder(View itemView) {
             super(itemView);
+            rlItemView = (RelativeLayout) itemView.findViewById(R.id.rl_item_view);
             txtTitle = (TextView) itemView.findViewById(R.id.txt_title);
             txtAuthor = (TextView) itemView.findViewById(R.id.txt_author);
-            imgBook = (ImageView) itemView.findViewById(R.id.iv_book_image);
-
+            ivBookImage = (ImageView) itemView.findViewById(R.id.iv_book_image);
+            txtDownload = (TextView) itemView.findViewById(R.id.txt_download);
+            txtOpen = (TextView) itemView.findViewById(R.id.txt_open);
+            ivFavourite = (ImageView) itemView.findViewById(R.id.iv_favourite);
         }
     }
 
