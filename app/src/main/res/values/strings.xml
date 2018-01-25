@@ -1,12 +1,9 @@
 <resources>
     <string name="app_name">FreeTamilEbooks</string>
     <string name="title_activity_home">HomeActivity</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">அமைப்புகள்</string>
-
     <string name="home">முகப்பு</string>
     <string name="aboutus">எங்களை பற்றி</string>
     <string name="our_team">பங்களிப்பாளர்கள்</string>
@@ -28,26 +25,20 @@
     <string name="download_error">பதிவிறக்கத்தின் போது பிழை ஏற்ப்பட்டுள்ளது.</string>
     <string name="download_cancelled">பதிவிறக்கம் இரத்துசெய்யப்பட்டது.</string>
     <string name="download_completed">பதிவிறக்கம் முடிந்தது.</string>
-
-
     <string name="your_message">உங்கள் கருத்து</string>
     <string name="your_email">உங்கள் மின்னஞ்சல்</string>
     <string name="lastname">கடைசி பெயர்</string>
     <string name="firstname">முதற் பெயர்</string>
-
-
     <string name="firstname_alert">முதற் பெயர் காலியாக இருக்கக் கூடாது</string>
     <string name="lastname_alert">கடைசி பெயர் காலியாக இருக்கக் கூடாது</string>
     <string name="mail_alert">மின்னஞ்சல் காலியாக இருக்கக் கூடாது</string>
     <string name="nomail_alert">சரியான மின்னஞ்சல் முகவரியை உள்ளிடவும்!!!</string>
     <string name="message_alert">உங்கள் கருத்தை உள்ளிடவும்</string>
-
-    <string name="check_connection">இந்த செயலியை பயன்படுத்த இணைய இணைப்பு தேவை&#8230;</string>
+    <string name="check_connection">இணைய இணைப்பை சரிபார்க்கவும்&#8230;</string>
     <string name="yes">ஆம்</string>
     <string name="no">இல்லை</string>
     <string name="down_epub">மின் புத்தகங்களை படிக்க FBReader தேவைப்படுகிறது&#8230;\nபதிவிறக்க வேண்டுமா?</string>
     <string name="wrong_format">தவறான கோப்பு வடிவம்!!!</string>
-
     <string name="push_notification">புது மின்னூல் அறிவிப்புகள்</string>
     <string name="on">வேண்டும்</string>
     <string name="off">வேண்டாம்</string>
@@ -55,4 +46,21 @@
     <string name="internal">உள்ளிருப்பு நினைவகம்</string>
     <string name="external">நினைவக அட்டை</string>
     <string name="set">அமை</string>
+    <string name="book_already_exist">புத்தகம் ஏற்கனவே பதிவிறக்கப்பட்டுள்ளது.</string>
+    <string name="want_to_downlaod">இந்த புத்தகத்தை பதிவிறக்க வேண்டுமா?</string>
+    <string name="download_started">பதிவிறக்கம் தொடங்கியது</string>
+
+    <string name="ebook_reader">மின்னூல் படிப்பான்</string>
+    <string name="ebook_reader_title">மின்னூல் படிப்பானை தேர்வுசெய்க</string>
+    <string name="are_you_sure_want_to_remove_from_downloads">Are you sure want to remove book from download list</string>
+    <string name="book_not_downloaded">புத்தகம் முழுவதுமாக பதிவிறக்கப்படவில்லை&#8230;</string>
+    <string-array name="reader_type">
+        <item>உள்ளிருப்பு</item>
+        <item>மற்றவை</item>
+    </string-array>
+    <string name="static_quote_1">புரட்சிப் பாதையில் கைத்துப்பாக்கிகளைவிட பெரிய ஆயுதங்கள் புத்தகங்களே&#8230;\n-லெனின்</string>
+    <string name="static_quote">உண்மையான வாசகன், வாசிப்பதை முடிப்பதே இல்லை!</string>
+    <string name="quote_author">– ஆஸ்கார் வைல்ட்</string>
+    <string name="web_url">https://raw.githubusercontent.com/kishorek/Free-Tamil-Ebooks/master/booksdb.xml</string>
+    <string name="repo_url">https://github.com/jskcse4/FreeTamilEBooks-Gradle</string>
 </resources>
