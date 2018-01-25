@@ -10,12 +10,17 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import com.folioreader.activity.FolioActivity;
+import com.folioreader.Config;
+import com.folioreader.ui.folio.activity.FolioActivity;
+import com.folioreader.util.FolioReader;
+import com.jskaleel.fte.BuildConfig;
+import com.jskaleel.fte.R;
 
 import java.io.File;
 import java.util.UUID;
@@ -72,18 +77,21 @@ public class DeviceUtils {
     }
 
     public static void openAppReader(Context context, String filePath) {
-        Intent intent = new Intent(context, FolioActivity.class);
+        /*Intent intent = new Intent(context, FolioActivity.class);
         intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
         intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, filePath);
-        context.startActivity(intent);
+        context.startActivity(intent);*/
+        FolioReader folioReader = new FolioReader(context);
+        folioReader.openBook(filePath);
     }
 
-    public static void openSystemReader(Context context, String filePath) {
+/*    public static void openSystemReader(Context context, String filePath) {
         Intent i = new Intent();
         i.setAction(android.content.Intent.ACTION_VIEW);
-        i.setDataAndType(Uri.fromFile(new File(filePath)), "application/epub+zip");
+        Uri fileUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", new File(filePath));
+        i.setDataAndType(fileUri, "application/epub+zip");
         context.startActivity(i);
-    }
+    }*/
 
     public static String getUUID() {
         return UUID.randomUUID().toString();

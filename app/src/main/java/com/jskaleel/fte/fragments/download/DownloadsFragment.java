@@ -86,14 +86,14 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
         downloadsList.setLayoutManager(layoutManager);
 
         downloadedBookList = DbUtils.getAllDownloadItems();
-        FTELog.print("Size : "+downloadedBookList.size());
-        if(downloadedBookList.size() > 0) {
+        FTELog.print("Size : " + downloadedBookList.size());
+        if (downloadedBookList.size() > 0) {
             downloadsList.setVisibility(View.VISIBLE);
             txtEmptyView.setVisibility(View.GONE);
             downloadFragemntAdapter = new DownloadFragemntAdapter(getActivity(), downloadedBookList);
             downloadFragemntAdapter.setListener(this);
             downloadsList.setAdapter(downloadFragemntAdapter);
-        }else {
+        } else {
             downloadsList.setVisibility(View.GONE);
             txtEmptyView.setVisibility(View.VISIBLE);
         }
@@ -112,12 +112,7 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
     @Override
     public void openDownloaded(DownloadedBooks singleItem) {
         if (DbUtils.isSuccess(singleItem.getBookId())) {
-            UserPreference userPreference = UserPreference.getInstance(getActivity());
-            if(userPreference.getReaderType() == 0) {
-                DeviceUtils.openAppReader(getActivity(), singleItem.getFilePath());
-            }else {
-                DeviceUtils.openSystemReader(getActivity(), singleItem.getFilePath());
-            }
+            DeviceUtils.openAppReader(getActivity(), singleItem.getFilePath());
         } else {
             Toast.makeText(getActivity(), getString(R.string.book_not_downloaded), Toast.LENGTH_LONG).show();
         }

@@ -47,39 +47,4 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/accent" />
-
-    <RelativeLayout
-        android:id="@+id/rl_reader_type_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="20dp">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            tools:ignore="RelativeOverlap">
-
-            <TextView
-                android:id="@+id/txt_reader_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ebook_reader"
-                android:textSize="18sp" />
-
-            <android.support.v4.widget.Space
-                android:layout_width="match_parent"
-                android:layout_height="5dp" />
-
-            <TextView
-                android:id="@+id/txt_reader_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/accent" />
 </LinearLayout>

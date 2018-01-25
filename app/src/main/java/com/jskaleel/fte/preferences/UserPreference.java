@@ -9,8 +9,6 @@ public class UserPreference {
     private static final String PREFS_NAME = "user_preference";
     private static final String BOOK_RESPONSE = "book_response";
     private static final String PUSH_NOTIFICATION = "push_notification";
-    private static final String EPUB_READER_TYPE = "epub_reader_type";
-    private static final String STORAGE_STATUS = "storage_status";
 
     private SharedPreferences mPreference;
     private SharedPreferences.Editor mEditor;
@@ -45,14 +43,5 @@ public class UserPreference {
 
     public Boolean getPushStatus() {
         return mPreference.getBoolean(PUSH_NOTIFICATION, true);
-    }
-
-    public void setReaderType(int readerType) {
-        mEditor.putInt(EPUB_READER_TYPE, readerType);
-        mEditor.apply();
-    }
-
-    public Integer getReaderType() {
-        return mPreference.getInt(EPUB_READER_TYPE, 0);
     }
 }

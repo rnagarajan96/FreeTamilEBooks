@@ -173,12 +173,12 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void downloadPressed(BookListParser.Books.Book bookItem) {
-        if(DbUtils.isExist(bookItem.getBookid())) {
+        if (DbUtils.isExist(bookItem.getBookid())) {
             Toast.makeText(getActivity(), getString(R.string.book_already_exist), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if(!DeviceUtils.isInternetConnected(getActivity())) {
+        if (!DeviceUtils.isInternetConnected(getActivity())) {
             Toast.makeText(getActivity(), getString(R.string.check_connection), Toast.LENGTH_LONG).show();
             return;
         }
@@ -188,7 +188,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             file.mkdirs();
         }
 
-        Log.e("supriya ","uri " +bookItem.getEpub());
+        Log.e("supriya ", "uri " + bookItem.getEpub());
         DownloadManager.Request requestBook = new DownloadManager.Request(Uri.parse(bookItem.getEpub()));
         String filePath = file + "/" + bookItem.getTitle();
         requestBook.setDestinationUri(Uri.parse("file://" + filePath));
@@ -199,7 +199,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         long downloadId = mDownloadManager.enqueue(requestBook);
         homeActivity.downloadIdList.add(downloadId);
         Toast.makeText(getActivity(), getString(R.string.download_started), Toast.LENGTH_SHORT).show();
-        FTELog.print("Storage Location : "+ getActivity().getExternalFilesDir(null));
+        FTELog.print("Storage Location : " + getActivity().getExternalFilesDir(null));
 
         DownloadedBooks downloadedBooks = new DownloadedBooks(bookItem.getBookid(), bookItem.getTitle(),
                 bookItem.getAuthor(), bookItem.getImage(),
@@ -209,26 +209,21 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void openPressed(final BookListParser.Books.Book singleItem) {
-        if(DbUtils.isExist(singleItem.getBookid())) {
-            if(DbUtils.isSuccess(singleItem.getBookid())) {
+        if (DbUtils.isExist(singleItem.getBookid())) {
+            if (DbUtils.isSuccess(singleItem.getBookid())) {
                 DownloadedBooks downloadedBooks = DbUtils.getSingleItem(DbUtils.BOOK_ID, singleItem.getBookid());
-                UserPreference userPreference = UserPreference.getInstance(getActivity());
-                if(userPreference.getReaderType() == 0) {
-                    DeviceUtils.openAppReader(getActivity(), downloadedBooks.getFilePath());
-                }else {
-                    DeviceUtils.openSystemReader(getActivity(), downloadedBooks.getFilePath());
-                }
-            }else {
+                DeviceUtils.openAppReader(getActivity(), downloadedBooks.getFilePath());
+            } else {
                 Toast.makeText(getActivity(), getString(R.string.book_not_downloaded), Toast.LENGTH_LONG).show();
             }
-        }else {
+        } else {
             AlertUtils.showAlertWithYesNo(getActivity(), getString(R.string.app_name),
                     getString(R.string.want_to_downlaod), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             downloadPressed(singleItem);
                         }
-                    },false);
+                    }, false);
         }
     }
 
@@ -337,25 +332,29 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(downloadReceiver, new IntentFilter(
-                DownloadService.DOWNLOAD_COMPLETED));
+        if (getActivity() != null) {
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(downloadReceiver, new IntentFilter(
+                    DownloadService.DOWNLOAD_COMPLETED));
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(downloadReceiver);
+        if (getActivity() != null) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(downloadReceiver);
+        }
     }
 
     private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent != null && intent.hasExtra(DbUtils.STATUS)) {
-                if(intent.getStringExtra(DbUtils.STATUS).equals("SUCCESS")) {
-                    if(bookListAdapter != null) {
+            if (intent != null && intent.hasExtra(DbUtils.STATUS)) {
+                if (intent.getStringExtra(DbUtils.STATUS).equals("SUCCESS")) {
+                    if (bookListAdapter != null) {
                         bookListAdapter.notifyDataSetChanged();
                     }
-                }else {
+                } else {
                     Toast.makeText(context, "failed", Toast.LENGTH_LONG).show();
                     long downloadId = intent.getExtras().getLong(DbUtils.DOWNLOAD_ID);
                     mDownloadManager.remove(downloadId);

@@ -58,7 +58,7 @@
         <item>உள்ளிருப்பு</item>
         <item>மற்றவை</item>
     </string-array>
-
+    <string name="static_quote_1">புரட்சிப் பாதையில் கைத்துப்பாக்கிகளைவிட பெரிய ஆயுதங்கள் புத்தகங்களே&#8230;\n-லெனின்</string>
     <string name="static_quote">உண்மையான வாசகன், வாசிப்பதை முடிப்பதே இல்லை!</string>
     <string name="quote_author">– ஆஸ்கார் வைல்ட்</string>
     <string name="web_url">https://raw.githubusercontent.com/kishorek/Free-Tamil-Ebooks/master/booksdb.xml</string>
