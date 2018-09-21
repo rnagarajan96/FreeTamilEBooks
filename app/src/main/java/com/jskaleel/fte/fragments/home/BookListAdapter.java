@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.jskaleel.fte.HomeActivity;
 import com.jskaleel.fte.R;
 import com.jskaleel.fte.booksdb.DbUtils;
@@ -46,19 +47,18 @@ class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookViewHolde
         holder.txtBookTitle.setText(singleItem.title);
         holder.txtAuthorName.setText(singleItem.author);
 
-        if(DbUtils.isExist(singleItem.getBookid())) {
+        if (DbUtils.isExist(singleItem.getBookid())) {
             holder.txtDownload.setVisibility(View.INVISIBLE);
             holder.txtOpen.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             holder.txtDownload.setVisibility(View.VISIBLE);
             holder.txtOpen.setVisibility(View.INVISIBLE);
         }
 
         if (!TextUtils.isEmpty(singleItem.image)) {
-            Glide.with(context).load(singleItem.image)
-                    .centerCrop()
-                    .crossFade()
-                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+            Glide.with(context)
+                    .applyDefaultRequestOptions(new RequestOptions().centerCrop())
+                    .load(singleItem.image)
                     .into(holder.ivBookImage);
         }
 
@@ -74,7 +74,7 @@ class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookViewHolde
         holder.txtOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(itemClickListener != null) {
+                if (itemClickListener != null) {
                     itemClickListener.openPressed(singleItem);
                 }
             }
@@ -115,7 +115,7 @@ class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookViewHolde
                 ((HomeActivity) context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(emptyViewListener != null) {
+                        if (emptyViewListener != null) {
                             if (filterList.size() == 0) {
                                 emptyViewListener.setEmptyViewOnUi(0);
                             } else {

@@ -17,8 +17,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.folioreader.Config;
-import com.folioreader.ui.folio.activity.FolioActivity;
-import com.folioreader.util.FolioReader;
+import com.folioreader.FolioReader;
 import com.jskaleel.fte.BuildConfig;
 import com.jskaleel.fte.R;
 
@@ -33,7 +32,7 @@ public class DeviceUtils {
     }
 
     public static File getAppDirectory(Context context) {
-         return new File(context.getExternalFilesDir(null) + "/ebooks");
+        return new File(context.getExternalFilesDir(null) + "/ebooks");
     }
 
     public static void hideSoftKeyboard(Context context, View paramView) {
@@ -76,22 +75,17 @@ public class DeviceUtils {
         }
     }
 
-    public static void openAppReader(Context context, String filePath) {
-        /*Intent intent = new Intent(context, FolioActivity.class);
-        intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE, FolioActivity.EpubSourceType.SD_CARD);
-        intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, filePath);
-        context.startActivity(intent);*/
-        FolioReader folioReader = new FolioReader(context);
+    public static void openAppReader(String filePath) {
+        FolioReader folioReader = FolioReader.get();
+        Config config = new Config()
+                .setAllowedDirection(Config.AllowedDirection.ONLY_VERTICAL)
+                .setNightMode(false)
+                .setShowTts(false)
+                .setThemeColorRes(R.color.primary)
+                .setDirection(Config.Direction.VERTICAL);
+        folioReader.setConfig(config, true);
         folioReader.openBook(filePath);
     }
-
-/*    public static void openSystemReader(Context context, String filePath) {
-        Intent i = new Intent();
-        i.setAction(android.content.Intent.ACTION_VIEW);
-        Uri fileUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", new File(filePath));
-        i.setDataAndType(fileUri, "application/epub+zip");
-        context.startActivity(i);
-    }*/
 
     public static String getUUID() {
         return UUID.randomUUID().toString();

@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.jskaleel.fte.R;
 import com.jskaleel.fte.utils.AlertUtils;
-import com.jskaleel.fte.utils.DownloadService;
 
 public class AboutUsFragment extends Fragment {
     private WebView webView;

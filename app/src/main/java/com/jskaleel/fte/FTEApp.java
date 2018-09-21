@@ -20,6 +20,8 @@ public class FTEApp extends Application {
         ActiveAndroid.initialize(this);
 
         UserPreference userPreference = UserPreference.getInstance(this);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("fte_books_test");
         if(userPreference.getPushStatus()) {
             FirebaseMessaging.getInstance().subscribeToTopic(FCM_TOPIC);
         }else {

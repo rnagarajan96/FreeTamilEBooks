@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.jskaleel.fte.R;
 import com.jskaleel.fte.booksdb.DownloadedBooks;
 
@@ -50,8 +51,8 @@ public class DownloadFragemntAdapter extends RecyclerView.Adapter<DownloadFragem
         holder.txtOpen.setVisibility(View.VISIBLE);
 
         Glide.with(context)
+                .applyDefaultRequestOptions(new RequestOptions().centerCrop())
                 .load(singleBook.getImageUrl())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.ivBookImage);
 
         holder.rlItemView.setOnClickListener(new View.OnClickListener() {

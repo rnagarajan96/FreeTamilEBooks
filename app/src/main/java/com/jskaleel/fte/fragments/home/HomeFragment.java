@@ -212,7 +212,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (DbUtils.isExist(singleItem.getBookid())) {
             if (DbUtils.isSuccess(singleItem.getBookid())) {
                 DownloadedBooks downloadedBooks = DbUtils.getSingleItem(DbUtils.BOOK_ID, singleItem.getBookid());
-                DeviceUtils.openAppReader(getActivity(), downloadedBooks.getFilePath());
+                DeviceUtils.openAppReader(downloadedBooks.getFilePath());
             } else {
                 Toast.makeText(getActivity(), getString(R.string.book_not_downloaded), Toast.LENGTH_LONG).show();
             }

@@ -1,5 +1,6 @@
 package com.jskaleel.fte;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,10 +21,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.assent.Assent;
-import com.afollestad.assent.AssentCallback;
-import com.afollestad.assent.PermissionResultSet;
 import com.crashlytics.android.Crashlytics;
+import com.github.florent37.runtimepermission.RuntimePermission;
 import com.jskaleel.fte.fragments.AboutUsFragment;
 import com.jskaleel.fte.fragments.CommentsFragment;
 import com.jskaleel.fte.fragments.ContributorsFragment;
@@ -51,7 +50,6 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Assent.setActivity(this, this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -76,16 +74,9 @@ public class HomeActivity extends AppCompatActivity
 
     private void init() {
         Crashlytics.setUserIdentifier(DeviceUtils.getUUID());
-
         downloadIdList = new ArrayList<>();
-        if (!Assent.isPermissionGranted(Assent.WRITE_EXTERNAL_STORAGE)) {
-            Assent.requestPermissions(new AssentCallback() {
-                @Override
-                public void onPermissionResult(PermissionResultSet result) {
+        RuntimePermission.askPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE).ask();
 
-                }
-            }, 69, Assent.WRITE_EXTERNAL_STORAGE);
-        }
         onTabSelected(0);
     }
 
@@ -185,15 +176,8 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Assent.handleResult(permissions, grantResults);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
-        Assent.setActivity(this, this);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(downloadReceiver, new IntentFilter(
                 DownloadService.DOWNLOAD_COMPLETED));
     }
@@ -202,8 +186,6 @@ public class HomeActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(downloadReceiver);
-        if (isFinishing())
-            Assent.setActivity(this, null);
     }
 
     private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {

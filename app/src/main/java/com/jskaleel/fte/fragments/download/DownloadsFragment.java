@@ -1,8 +1,8 @@
 package com.jskaleel.fte.fragments.download;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.assent.Assent;
-import com.afollestad.assent.AssentCallback;
-import com.afollestad.assent.PermissionResultSet;
+import com.github.florent37.runtimepermission.RuntimePermission;
 import com.jskaleel.fte.R;
 import com.jskaleel.fte.booksdb.DbUtils;
 import com.jskaleel.fte.booksdb.DownloadedBooks;
@@ -26,8 +24,7 @@ import com.jskaleel.fte.utils.FTELog;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequestPermissionsResultCallback,
-        DownloadedItemClicked {
+public class DownloadsFragment extends Fragment implements DownloadedItemClicked {
     private List<DownloadedBooks> downloadedBookList;
     private RecyclerView downloadsList;
     private DownloadFragemntAdapter downloadFragemntAdapter;
@@ -41,21 +38,16 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
     @Override
     public void onResume() {
         super.onResume();
-        Assent.setFragment(this, this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (getActivity() != null && getActivity().isFinishing()) {
-            Assent.setFragment(this, null);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_downloads, null);
-        Assent.setFragment(this, this);
 
         init(view);
         setupDefaults();
@@ -65,13 +57,7 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
     }
 
     private void init(View view) {
-        if (!Assent.isPermissionGranted(Assent.WRITE_EXTERNAL_STORAGE)) {
-            Assent.requestPermissions(new AssentCallback() {
-                @Override
-                public void onPermissionResult(PermissionResultSet result) {
-                }
-            }, 69, Assent.WRITE_EXTERNAL_STORAGE);
-        }
+        RuntimePermission.askPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE).ask();
 
         downloadsList = (RecyclerView) view.findViewById(R.id.download_list);
         downloadedBookList = new ArrayList<>();
@@ -104,15 +90,9 @@ public class DownloadsFragment extends Fragment implements FragmentCompat.OnRequ
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Assent.handleResult(permissions, grantResults);
-    }
-
-    @Override
     public void openDownloaded(DownloadedBooks singleItem) {
         if (DbUtils.isSuccess(singleItem.getBookId())) {
-            DeviceUtils.openAppReader(getActivity(), singleItem.getFilePath());
+            DeviceUtils.openAppReader(singleItem.getFilePath());
         } else {
             Toast.makeText(getActivity(), getString(R.string.book_not_downloaded), Toast.LENGTH_LONG).show();
         }
