@@ -11,9 +11,11 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -24,6 +26,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,11 +55,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 
 
-public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ItemClickListener, EmptyViewListener {
+public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
+        ItemClickListener, EmptyViewListener {
 
     private UserPreference mPreference;
     private RecyclerView rvBookList;
@@ -65,6 +71,13 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private ProgressDialog pg;
     private DownloadManager mDownloadManager;
     private HomeActivity homeActivity;
+    private Context mContext;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

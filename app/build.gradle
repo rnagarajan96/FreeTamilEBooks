@@ -21,15 +21,26 @@ android {
 
     defaultConfig {
         applicationId "com.jskaleel.fte"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 28
-        versionCode 18
-        versionName "5.0"
+        versionCode 23
+        versionName "6.0"
+        multiDexEnabled true
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("FTEKey.keystore")
+            storePassword "NBNK6rp9@"
+            keyAlias "fte"
+            keyPassword "NBNK6rp9@"
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -70,6 +81,8 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+
+    implementation 'com.android.support:multidex:1.0.3'
 }
 
 apply plugin: 'com.google.gms.google-services'

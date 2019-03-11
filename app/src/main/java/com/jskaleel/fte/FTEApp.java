@@ -1,6 +1,6 @@
 package com.jskaleel.fte;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import com.activeandroid.ActiveAndroid;
 import com.crashlytics.android.Crashlytics;
@@ -8,7 +8,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.jskaleel.fte.preferences.UserPreference;
 import io.fabric.sdk.android.Fabric;
 
-public class FTEApp extends Application {
+public class FTEApp extends MultiDexApplication {
 
     public static final String FCM_TOPIC = "fte_books";
 
